@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Noticia;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
-class NoticiaController extends Controller
+class LoginController extends Controller
 {
-	public function __construct() {
-		$this->middleware("auth");
-	}
     /**
      * Display a listing of the resource.
      *
@@ -18,12 +16,7 @@ class NoticiaController extends Controller
      */
     public function index()
     {
-		$noticia = new Noticia();
-		$noticias = Noticia::All();
-        return view("noticias.index", [
-			"noticia" => $noticia,
-			"noticias" => $noticias
-		]);
+        return view("login.index");
     }
 
     /**
@@ -44,18 +37,20 @@ class NoticiaController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->get("id") != "") {
-			$noticia = Noticia::Find($request->get("id"));
+		$credentials = $request->only('email', 'password');
+
+		if (Auth::attempt($credentials)) {
+			
+			$request->session()->regenerate();
+			
+			return redirect("/noticias");
+			
 		} else {
-			$noticia = new Noticia();
+		
+			return redirect("/login");
+			
 		}
-		$noticia->titulo = $request->get("titulo");
-		$noticia->subtitulo = $request->get("subtitulo");
-		$noticia->texto = $request->get("texto");
-		$noticia->usuario = Auth::id();
-		$noticia->save();
-		$request->session()->flash("status", "salvo");
-		return redirect("/noticias");
+		
     }
 
     /**
@@ -77,12 +72,7 @@ class NoticiaController extends Controller
      */
     public function edit($id)
     {
-        $noticia = Noticia::Find($id);
-		$noticias = Noticia::All();
-        return view("noticias.index", [
-			"noticia" => $noticia,
-			"noticias" => $noticias
-		]);
+        //
     }
 
     /**
@@ -103,10 +93,15 @@ class NoticiaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Request $request)
+    public function destroy($id)
     {
-        Noticia::Destroy($id);
-		$request->Session()->Flash("status", "excluido");
-		return Redirect("/noticias");
+        //
     }
+	
+	public function logout() 
+	{
+		Auth::logout();
+		return redirect("/login");
+	}
+	
 }
