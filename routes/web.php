@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NoticiaController;
+use App\Http\Controllers\NoticiaPublicController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImagemController;
@@ -23,9 +24,7 @@ Route::resources([
 	"imagens" => ImagemController::Class
 ]);
 
-Route::get('/', function () {
-    return redirect("/login");
-});
+Route::get('/', [ NoticiaPublicController::Class, "index" ]);
 
 Route::get("/logout", [ LoginController::Class, "logout" ] );
 Route::get("/login", [ LoginController::Class, "index" ] )->name('login');
