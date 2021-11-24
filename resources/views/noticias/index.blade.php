@@ -33,9 +33,9 @@
 <table class="table align-items-center mb-0">
 	<colgroup>
 		<col width="600">
-		<col width="50">
-		<col width="50">
-		<col width="50">
+		<col width="80">
+		<col width="80">
+		<col width="80">
 	</colgroup>
 	<thead>
 		<tr>
